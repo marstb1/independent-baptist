@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podcast Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .podcast-info {
+      text-align: center;
+    }
+    .podcast-info img {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+    }
+    .podcast-info h1 {
+      margin: 10px 0;
+      font-size: 24px;
+    }
+    .podcast-info p {
+      color: #666;
+    }
+    .episodes {
+      margin-top: 30px;
+    }
+    .episode-item {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    .episode-item:last-child {
+      border-bottom: none;
+    }
+    .episode-item h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .episode-item p {
+      margin: 5px 0;
+      color: #666;
+    }
+    .play-button {
+      background-color: #1f78d1;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .play-button:hover {
+      background-color: #165a9e;
+    }
+    .audio-player {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Podcast Page</h1>
+  </header>
+
+  <div class="container">
+    <!-- Podcast Info Section -->
+    <div class="podcast-info">
+      <img src="https://via.placeholder.com/150" alt="Podcast Cover">
+      <h1>First Baptist Church Sermons</h1>
+      <p>By FBC Eaton</p>
+      <p>Religion & Spirituality</p>
+    </div>
+
+    <!-- Episodes Section -->
+    <div class="episodes">
+      <h2>Episodes</h2>
+      <div id="episode-list">
+        <!-- Episodes will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample JSON data for episodes
+    const episodes = [
+      {
+        title: "Episode 1: The Power of Faith",
+        date: "October 1, 2023",
+        duration: "45:30",
+        audioUrl: "audio.mp3"
+      },
+      {
+        title: "Episode 2: Love and Forgiveness",
+        date: "October 8, 2023",
+        duration: "50:15",
+        audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      },
+      {
+        title: "Episode 3: Finding Peace",
+        date: "October 15, 2023",
+        duration: "40:10",
+        audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      }
+    ];
+
+    // Function to render episodes
+    function renderEpisodes() {
+      const episodeList = document.getElementById("episode-list");
+      episodes.forEach((episode, index) => {
+        const episodeItem = document.createElement("div");
+        episodeItem.classList.add("episode-item");
+
+        episodeItem.innerHTML = `
+          <h3>${episode.title}</h3>
+          <p>Published: ${episode.date}</p>
+          <p>Duration: ${episode.duration}</p>
+          <button class="play-button" onclick="playAudio('${episode.audioUrl}', ${index})">Play</button>
+          <audio id="audio-${index}" class="audio-player" controls>
+            <source src="${episode.audioUrl}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        `;
+        episodeList.appendChild(episodeItem);
+      });
+    }
+
+    // Function to play audio
+    function playAudio(audioUrl, index) {
+      const audioElement = document.getElementById(`audio-${index}`);
+      audioElement.style.display = "block";
+      audioElement.play();
+    }
+
+    // Render episodes on page load
+    window.onload = renderEpisodes;
+  </script>
+</body>
+</html>
+
+
+
+
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Sample data
+const episodes = [
+  {
+    title: "Episode 1: The Power of Faith",
+    date: "October 1, 2023",
+    duration: "45:30",
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  },
+  // Add more episodes
+];
+
+// API endpoint to fetch episodes
+app.get("/api/episodes", (req, res) => {
+  res.json(episodes);
+});
+
+// Serve static files
+app.use(express.static("public"));
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+async function fetchEpisodes() {
+  const response = await fetch("/api/episodes");
+  const episodes = await response.json();
+  return episodes;
+}
+
+async function renderEpisodes() {
+  const episodes = await fetchEpisodes();
+  const episodeList = document.getElementById("episode-list");
+  episodes.forEach((episode, index) => {
+    const episodeItem = document.createElement("div");
+    episodeItem.classList.add("episode-item");
+
+    episodeItem.innerHTML = `
+      <h3>${episode.title}</h3>
+      <p>Published: ${episode.date}</p>
+      <p>Duration: ${episode.duration}</p>
+      <button class="play-button" onclick="playAudio('${episode.audioUrl}', ${index})">Play</button>
+      <audio id="audio-${index}" class="audio-player" controls>
+        <source src="${episode.audioUrl}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    `;
+    episodeList.appendChild(episodeItem);
+  });
+}
